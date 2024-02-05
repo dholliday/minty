@@ -4,10 +4,11 @@
   "description": "Helping mint in the Solana ecosystem",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "m": "ts-node src/metadata.ts"
   },
   "keywords": [],
-  "author": "test",
+  "author": "Dave Holliday",
   "license": "ISC",
   "devDependencies": {
     "ts-node": "^10.8.0",

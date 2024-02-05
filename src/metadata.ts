@@ -10,3 +10,15 @@ const metadata = {
   image:
     "https://github.com/dholliday/bigdex/blob/eff383839797a93980efe01c2f541fad7568e5c2/public/token/token_image.png",
 };
+
+async function m() {}
+
+m()
+  .then(() => {
+    console.log("Finished successfully");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.log(error);
+    process.exit(1);
+  });
