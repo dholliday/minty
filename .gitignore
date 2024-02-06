@@ -21,6 +21,7 @@ coverage
 
 # API keys and secrets
 .env
+.mint.env
 
 # Dependency directory
 node_modules

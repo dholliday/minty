@@ -1,12 +1,19 @@
 import { initializeKeypair } from "./initializeKeypair";
-import * as helpers from "./utils/helpers";
+import * as help from "./utils/helpers";
 import * as web3 from "@solana/web3.js";
+import * as bs58 from "bs58";
+import dotenv from "dotenv";
+dotenv.config();
 
 async function main() {
   const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
-  const user = await initializeKeypair(connection);
 
-  console.log("PublicKey:", user.publicKey.toBase58());
+  const secret = process.env.SOLANA_MAIN_WALLET_PRIVATE_KEY as string;
+  const secretDecode = bs58.decode(secret);
+  const secretKey = Uint8Array.from(secretDecode);
+  const keypair = web3.Keypair.fromSecretKey(secretKey);
+
+  console.log("Public Key:", keypair.publicKey.toBase58());
 
   // const mint = await createNewMint(
   //   connection,
@@ -25,26 +32,22 @@ async function main() {
 
   // await mintTokens(connection, user, mint, tokenAccount.address, user, 1000000);
 
-  console.log(
-    new web3.PublicKey("2fnYBGbP1joRyyp7LRqhn678A32Hr2x1FP6skQt5LPwr")
-  );
+  // const receiverTokenAccount = await help.createTokenAccount(
+  //   connection,
+  //   user, // payer
+  //   new web3.PublicKey("JCfEGkxmEXeWrysCuZM96UnxhPd8EHWkQFFj5Sug1S9Y"), // mint
+  //   new web3.PublicKey("HpksWfTfABoBwPJ8ac8c6qvAewtNs5DyrDuZWMieCcfq") //receiver
+  // );
 
-  const receiverTokenAccount = await createTokenAccount(
-    connection,
-    user, // payer
-    new web3.PublicKey("JCfEGkxmEXeWrysCuZM96UnxhPd8EHWkQFFj5Sug1S9Y"), // mint
-    new web3.PublicKey("HpksWfTfABoBwPJ8ac8c6qvAewtNs5DyrDuZWMieCcfq") //receiver
-  );
-
-  await transferTokens(
-    connection,
-    user, // payer
-    new web3.PublicKey("2fnYBGbP1joRyyp7LRqhn678A32Hr2x1FP6skQt5LPwr"), // source token account
-    receiverTokenAccount.address, // destination token account
-    user.publicKey,
-    100,
-    new web3.PublicKey("JCfEGkxmEXeWrysCuZM96UnxhPd8EHWkQFFj5Sug1S9Y") // token mint
-  );
+  // await help.transferTokens(
+  //   connection,
+  //   user, // payer
+  //   new web3.PublicKey("2fnYBGbP1joRyyp7LRqhn678A32Hr2x1FP6skQt5LPwr"), // source token account
+  //   receiverTokenAccount.address, // destination token account
+  //   user.publicKey,
+  //   100,
+  //   new web3.PublicKey("JCfEGkxmEXeWrysCuZM96UnxhPd8EHWkQFFj5Sug1S9Y") // token mint
+  // );
 }
 
 main()
