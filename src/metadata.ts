@@ -1,17 +1,32 @@
+import * as web3 from "@solana/web3.js";
+import { generateSigner, percentAmount } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
+import {
+  createV1,
+  TokenStandard,
+} from "@metaplex-foundation/mpl-token-metadata";
 
-const umi = createUmi("https://api.devnet.solana.com").use(mplTokenMetadata());
+const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+const umi = createUmi(connection);
 
-const metadata = {
-  name: "Big Dex",
-  symbol: "BIGDEX",
-  description: "How big is your dex? Eat Stake grow Big Dex",
-  image:
-    "https://github.com/dholliday/bigdex/blob/eff383839797a93980efe01c2f541fad7568e5c2/public/token/token_image.png",
-};
+async function m() {
+  const mint = generateSigner(umi);
+  console.log("MINT ACCOUNT");
+  console.log(mint);
 
-async function m() {}
+  const authority = generateSigner(umi);
+  console.log("AUTHORITY ACCOUNT");
+  console.log(authority);
+
+  await createV1(umi, {
+    mint,
+    authority,
+    name: "ABC",
+    uri: "https://github.com/dholliday/bigdex/blob/dff53f703c4bbd687b1433e1fadcd5e7296cec14/public/token/token_image.png",
+    sellerFeeBasisPoints: percentAmount(0),
+    tokenStandard: TokenStandard.Fungible,
+  }).sendAndConfirm(umi);
+}
 
 m()
   .then(() => {
