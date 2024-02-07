@@ -12,6 +12,7 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import {
   createV1,
   TokenStandard,
+  printSupply,
 } from "@metaplex-foundation/mpl-token-metadata";
 import dotenv from "dotenv";
 dotenv.config();
@@ -20,6 +21,8 @@ const connection = new web3.Connection(web3.clusterApiUrl("mainnet-beta"));
 const umi = createUmi(connection);
 
 async function m() {
+  const latestBlockHash = await connection.getLatestBlockhash();
+  console.log(latestBlockHash);
   const mint = generateSigner(umi);
   fs.writeFileSync(
     ".mint.env",
@@ -58,6 +61,7 @@ async function m() {
     uri: "https://bigdex.lol/token/bigdex/token_metadata.json",
     sellerFeeBasisPoints: percentAmount(0),
     tokenStandard: TokenStandard.Fungible,
+    decimals: 1,
   }).sendAndConfirm(umi);
 
   console.log("Created Accounts Successfully ✅");
